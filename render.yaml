@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: grocery-flyer-scraper
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: DAILY_SCRAPE_LIMIT
+        value: "30"
+      - key: CACHE_SECONDS
+        value: "300"

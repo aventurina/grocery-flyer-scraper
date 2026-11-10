@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Sample Market Weekly Flyer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 0 auto; padding: 16px; }
+    .flyer-item { border: 1px solid #ccc; border-radius: 8px; padding: 12px; margin: 12px 0; }
+    .item-category { font-size: 12px; color: #666; text-transform: uppercase; }
+    .item-name { font-size: 18px; font-weight: 600; }
+    .item-price { color: #b00020; font-size: 20px; font-weight: 700; }
+    .item-details { font-size: 14px; color: #444; }
+    #status { text-align: center; color: #666; padding: 24px; }
+  </style>
+</head>
+<body>
+  <h1>Sample Market Weekly Flyer</h1>
+  <p>Fictional store and made-up prices, used to demo the scraper. Items load with JavaScript and more appear as you scroll.</p>
+  <div id="flyer"></div>
+  <div id="status">Loading...</div>
+
+  <script>
+    const ALL_ITEMS = [
+      ["Produce", "Gala Apples", "$1.49", "per lb"],
+      ["Produce", "Bananas", "59¢", "per lb"],
+      ["Produce", "Baby Carrots", "2 for $4", "1 lb bag"],
+      ["Produce", "Strawberries", "$2.99", "1 lb container"],
+      ["Dairy", "Whole Milk", "$3.29", "1 gallon"],
+      ["Dairy", "Large Eggs", "$2.49", "dozen, limit 2"],
+      ["Dairy", "Greek Yogurt", "3/$5", "5.3 oz cups"],
+      ["Dairy", "Shredded Cheddar", "$2.99", "8 oz bag"],
+      ["Meat", "Boneless Chicken Breast", "$1.99", "per lb"],
+      ["Meat", "Ground Beef 80/20", "$4.49", "per lb"],
+      ["Meat", "Pork Chops", "$2.79", "per lb"],
+      ["Meat", "Sliced Turkey", "$5.99", "per lb, deli"],
+      ["Pantry", "Spaghetti", "5 for $5", "16 oz box"],
+      ["Pantry", "Tomato Sauce", "2 for $3", "24 oz jar"],
+      ["Pantry", "Peanut Butter", "$2.50", "16 oz jar"],
+      ["Pantry", "Cereal", "$2.99", "select varieties"],
+      ["Bakery", "Sourdough Loaf", "$3.99", "baked fresh daily"],
+      ["Bakery", "Blueberry Muffins", "$4.49", "pack of 4"],
+      ["Frozen", "Vanilla Ice Cream", "$3.99", "48 oz tub"],
+      ["Frozen", "Frozen Pizza", "2 for $9", "12 inch"],
+      ["Frozen", "Frozen Broccoli", "$1.25", "12 oz bag"],
+      ["Beverages", "Sparkling Water", "4/$5", "12 pack cans"],
+      ["Beverages", "Orange Juice", "$3.49", "59 oz carton"],
+      ["Beverages", "Ground Coffee", "$6.99", "12 oz bag"],
+    ];
+    const PAGE_SIZE = 8;
+    let shown = 0;
+    const flyer = document.getElementById("flyer");
+    const status = document.getElementById("status");
+
+    function loadMore() {
+      const batch = ALL_ITEMS.slice(shown, shown + PAGE_SIZE);
+      for (const [category, name, price, details] of batch) {
+        const div = document.createElement("div");
+        div.className = "flyer-item";
+        div.innerHTML = `<div class="item-category">${category}</div>
+          <div class="item-name">${name}</div>
+          <div class="item-price">${price}</div>
+          <div class="item-details">${details}</div>`;
+        flyer.appendChild(div);
+      }
+      shown += batch.length;
+      status.textContent = shown >= ALL_ITEMS.length ? "End of flyer" : "Scroll for more";
+    }
+
+    // Items are not in the HTML. They appear after a delay, like a real JS-driven page.
+    setTimeout(loadMore, 700);
+
+    let loading = false;
+    window.addEventListener("scroll", () => {
+      const nearBottom = window.innerHeight + window.scrollY > document.body.offsetHeight - 200;
+      if (nearBottom && !loading && shown > 0 && shown < ALL_ITEMS.length) {
+        loading = true;
+        status.textContent = "Loading...";
+        setTimeout(() => { loadMore(); loading = false; }, 400);
+      }
+    });
+  </script>
+</body>
+</html>
